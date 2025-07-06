@@ -141,6 +141,7 @@ const allowedFields = [
     success: true,
     message: "Order updated successfully",
     data: updatedOrder,
+    count : updatedOrder.length
   });
 });
 exports.GetSingleProduct = asyncHandler(async (req, res , next) => {
