@@ -2,7 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const Order = require("./model/productModel"); // Adjust the path if needed
 
-const callStatusOptions = ["Call received", "Call not received"];
+const callStatusOptions = ["Call", "CNR"];
 const paymentTypes = ["COD", "Online"];
 const returnStatuses = ["YES", "NO"];
 const paymentStatuses = ["YES", "NO"];

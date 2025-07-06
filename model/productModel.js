@@ -114,7 +114,7 @@ const OrderSchema = new mongoose.Schema(
     },
     callStatus: {
       type: String,
-      enum: ["Call received", "Call not received"],
+      enum: ["Call", "CNR"],
       required: true,
     },
     paymentType: {
