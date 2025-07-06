@@ -81,10 +81,23 @@ exports.GetAllProducts = asyncHandler(async (req, res, next) => {
     case "unpaid":
       query.payment = "NO";
       break;
-    default:
-      query = {}; // All orders
-      break;
-  }
+  case "fulfilled":
+    query.fulfillmentStatus = "Fulfilled";
+    break;
+  case "unfulfilled":
+    query.fulfillmentStatus = "Unfulfilled";
+    break;
+  case "delivered":
+    query.deliveryStatus = "Delivered";
+    break;
+  case "pending":
+    query.deliveryStatus = "Pending";
+    break;
+
+  default:
+    query = {}; 
+    break;
+}
 
   console.log("Query >>>", query);
   const orders = await Product.find(query);
