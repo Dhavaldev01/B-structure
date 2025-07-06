@@ -58,48 +58,113 @@ exports.CreateProduct = asyncHandler(async (req, res , next) => {
 //   })
 
 
+// exports.GetAllProducts = asyncHandler(async (req, res, next) => {
+//   const {
+//     paymentType,
+//     payment,
+//     returnStatus,
+//     fulfillmentStatus,
+//     deliveryStatus,
+//     paymentAmount,
+//   } = req.query;
+//   let query = {};
+
+// //   switch (filter) {
+// //     case "online":
+// //       query.paymentType = "Online";
+// //       break;
+// //     case "cod":
+// //       query.paymentType = "COD";
+// //       break;
+// //     case "return":
+// //       query.returnStatus = "YES"; 
+// //       break;
+// //     case "loss":
+// //       query = {
+// //         payment: "NO",
+// //         returnStatus: "NO",
+// //       };
+// //       break;
+// //     case "unpaid":
+// //       query.payment = "NO";
+// //       break;
+// //   case "fulfilled":
+// //     query.fulfillmentStatus = "Fulfilled";
+// //     break;
+// //   case "unfulfilled":
+// //     query.fulfillmentStatus = "Unfulfilled";
+// //     break;
+// //   case "delivered":
+// //     query.deliveryStatus = "Delivered";
+// //     break;
+// //   case "pending":
+// //     query.deliveryStatus = "Pending";
+// //     break;
+
+// //   default:
+// //     query = {}; 
+// //     break;
+// // }
+
+//   if (paymentType) query.paymentType = paymentType;
+//   if (payment) query.payment = payment;
+//   if (returnStatus) query.returnStatus = returnStatus;
+//   if (fulfillmentStatus) query.fulfillmentStatus = fulfillmentStatus;
+//   if (deliveryStatus) query.deliveryStatus = deliveryStatus;
+//   if (paymentAmount) {
+//     query.paymentAmount = Number(paymentAmount); 
+//   }
+
+// console.log("Query Params >>>", req.query);
+// console.log("Converted Payment Amount >>>", Number(paymentAmount));
+
+
+//   console.log("Query >>>", query);
+//   const orders = await Product.find(query);
+
+//   if (!orders.length) {
+//     return next(new customError("No orders found for this filter", 404));
+//   }
+
+//   return res.status(200).json({
+//     success: true,
+//     message: "Orders fetched successfully",
+//     // filter: filter || "all",
+//     data: orders,
+//   });
+// });
+
 exports.GetAllProducts = asyncHandler(async (req, res, next) => {
-  const { filter } = req.query;
+  const {
+    filter,
+    paymentType,
+    payment,
+    returnStatus,
+    fulfillmentStatus,
+    deliveryStatus,
+    paymentAmount,
+  } = req.query;
+
   let query = {};
 
-  switch (filter) {
-    case "online":
-      query.paymentType = "Online";
-      break;
-    case "cod":
-      query.paymentType = "COD";
-      break;
-    case "return":
-      query.returnStatus = "YES";
-      break;
-    case "loss":
-      query = {
-        payment: "NO",
-        returnStatus: "NO",
-      };
-      break;
-    case "unpaid":
-      query.payment = "NO";
-      break;
-  case "fulfilled":
-    query.fulfillmentStatus = "Fulfilled";
-    break;
-  case "unfulfilled":
-    query.fulfillmentStatus = "Unfulfilled";
-    break;
-  case "delivered":
-    query.deliveryStatus = "Delivered";
-    break;
-  case "pending":
-    query.deliveryStatus = "Pending";
-    break;
+  // 🔄 Old predefined filters (optional support)
+  if (filter === "loss") {
+    query.payment = "NO";
+    query.returnStatus = "NO";
+  }
 
-  default:
-    query = {}; 
-    break;
-}
+  // ✅ Add flexible filters
+  if (paymentType) query.paymentType = paymentType;
+  if (payment) query.payment = payment;
+  if (returnStatus) query.returnStatus = returnStatus;
+  if (fulfillmentStatus) query.fulfillmentStatus = fulfillmentStatus;
+  if (deliveryStatus) query.deliveryStatus = deliveryStatus;
+  if (paymentAmount && !isNaN(paymentAmount)) {
+    query.paymentAmount = Number(paymentAmount);
+  }
 
-  console.log("Query >>>", query);
+  console.log("Final Query >>>", query);
+
   const orders = await Product.find(query);
 
   if (!orders.length) {
@@ -109,10 +174,10 @@ exports.GetAllProducts = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "Orders fetched successfully",
-    filter: filter || "all",
     data: orders,
   });
 });
+
 
 exports.updateOrderFields = asyncHandler(async (req, res, next) => {
   const orderId = req.params.id;
