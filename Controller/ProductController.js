@@ -175,6 +175,7 @@ exports.GetAllProducts = asyncHandler(async (req, res, next) => {
     success: true,
     message: "Orders fetched successfully",
     data: orders,
+    count : orders.length
   });
 });
 
